@@ -1,120 +1,109 @@
-import {
-  Container,
-  Typography,
-  Box,
-  Grid,
-  Card,
-  CardContent,
-  Button,
-  Avatar,
-  useTheme
-} from '@mui/material'
-import { X, OpenInNew } from '@mui/icons-material'
+import { Typography, Box, Card, CardContent, Button, Avatar, Container, useTheme } from '@mui/material'
+import { Twitter, OpenInNew } from '@mui/icons-material'
 import { Link } from 'react-router-dom'
 
 const AboutPage = () => {
   const theme = useTheme()
-  // Inserisci qui il tuo username Twitter
-  const twitterUsername = "tuo_username" // Cambia questo con il tuo vero username Twitter
-
-  const contestInfo = [
-    {
-      icon: '🎮',
-      title: 'Premio',
-      description: 'Nintendo Switch OLED modello più recente',
-      color: theme.palette.success.main,
-      bgcolor: theme.palette.success.light + '20'
-    },
-    {
-      icon: '💰',
-      title: 'Costo Biglietto',
-      description: '10€ per biglietto, acquisti multipli permessi',
-      color: theme.palette.info.main,
-      bgcolor: theme.palette.info.light + '20'
-    },
-    {
-      icon: '🎲',
-      title: 'Estrazione',
-      description: 'Casuale e trasparente in diretta',
-      color: theme.palette.secondary.main,
-      bgcolor: theme.palette.secondary.light + '20'
-    },
-    {
-      icon: '📱',
-      title: 'Aggiornamenti',
-      description: 'Seguimi su Twitter per gli aggiornamenti',
-      color: theme.palette.warning.main,
-      bgcolor: theme.palette.warning.light + '20'
-    }
-  ]
+  // Inserisci qui il tuo username X (ex Twitter)
+  const xUsername = "ClaudioSonnet" // Cambia questo con il tuo vero username X
 
   return (
-    <Box 
-      sx={{ 
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)',
-        pb: 4
-      }}
-    >
-      <Container maxWidth="lg" sx={{ py: 6 }}>
-        {/* Header */}
-        <Box sx={{ textAlign: 'center', mb: 8 }}>
-          <Typography variant="h2" sx={{ fontWeight: 'bold', mb: 2 }}>
-            Chi sono
-          </Typography>
-          <Box
-            sx={{
-              width: 96,
-              height: 4,
-              backgroundColor: theme.palette.primary.main,
-              mx: 'auto',
-              borderRadius: 2
-            }}
-          />
-        </Box>
+    <Box className="main-container" sx={{ py: 4 }}>
+      {/* Header */}
+      <Box sx={{ textAlign: 'center', mb: { xs: 4, sm: 6, md: 8 } }}>
+        <Typography 
+          variant="h2" 
+          className="neon-text"
+          sx={{ 
+            fontWeight: 'bold', 
+            mb: 2,
+            fontSize: { xs: '2rem', sm: '2.5rem', md: '3.75rem' },
+            color: 'white',
+            textShadow: '0 0 20px rgba(255, 255, 255, 0.5)'
+          }}
+        >
+          About Me
+        </Typography>
+        <Box
+          sx={{
+            width: { xs: 64, sm: 80, md: 96 },
+            height: 4,
+            background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.info.main})`,
+            mx: 'auto',
+            borderRadius: 2
+          }}
+        />
+      </Box>
+        <Container maxWidth="md">
 
-        {/* Profilo */}
-        <Card sx={{ borderRadius: 3, boxShadow: 4, mb: 6 }}>
-          <CardContent sx={{ p: 5 }}>
+        {/* Profile */}
+        <Card className="glass-card" sx={{ borderRadius: 3, mb: { xs: 4, sm: 5, md: 6 }, mx: { xs: 1, sm: 0 } }}>
+          <CardContent sx={{ p: { xs: 3, sm: 4, md: 5 } }}>
             <Box sx={{ 
               display: 'flex', 
               flexDirection: { xs: 'column', md: 'row' },
               alignItems: 'center',
-              gap: 4
+              gap: { xs: 3, sm: 4 }
             }}>
               {/* Avatar */}
               <Avatar
                 sx={{
-                  width: 128,
-                  height: 128,
+                  width: { xs: 96, sm: 112, md: 128 },
+                  height: { xs: 96, sm: 112, md: 128 },
                   background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.info.main})`,
-                  fontSize: '3rem',
+                  fontSize: { xs: '2.5rem', sm: '2.75rem', md: '3rem' },
                   fontWeight: 'bold'
                 }}
               >
                 C
               </Avatar>
 
-              {/* Informazioni */}
+              {/* Info */}
               <Box sx={{ 
                 flex: 1, 
                 textAlign: { xs: 'center', md: 'left' }
               }}>
-                <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 3 }}>
-                  Ciao! Sono Claudio
+                <Typography 
+                  variant="h3" 
+                  sx={{ 
+                    fontWeight: 'bold', 
+                    mb: { xs: 2, sm: 3 },
+                    fontSize: { xs: '1.8rem', sm: '2.2rem', md: '3rem' },
+                    color: 'white'
+                  }}
+                >
+                  Hi! I'm Claudio
                 </Typography>
-                <Typography variant="h6" color="text.secondary" sx={{ lineHeight: 1.7, mb: 3 }}>
-                  Benvenuto nel mio contest per vincere una Nintendo Switch OLED! 
-                  Sono un appassionato di gaming e tecnologia, e ho deciso di organizzare 
-                  questo contest per condividere la mia passione con la community.
+                <Typography 
+                  variant="h6" 
+                  color="text.secondary" 
+                  sx={{ 
+                    lineHeight: 1.7, 
+                    mb: { xs: 2, sm: 3 },
+                    fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' },
+                    px: { xs: 1, sm: 0 }
+                  }}
+                >
+                  Welcome to my contest to win a Nintendo Switch 2!
+                  I'm passionate about gaming and technology, and I decided to organize
+                  this contest to share my passion with the community.
                 </Typography>
-                <Typography variant="h6" color="text.secondary" sx={{ lineHeight: 1.7, mb: 4 }}>
-                  Ogni biglietto costa solo 10€ e puoi acquistarne quanti ne vuoi per 
-                  aumentare le tue probabilità di vincita. Il contest è completamente 
-                  trasparente e il vincitore sarà estratto in modo casuale e pubblico.
+                <Typography 
+                  variant="h6" 
+                  color="text.secondary" 
+                  sx={{ 
+                    lineHeight: 1.7, 
+                    mb: { xs: 3, sm: 4 },
+                    fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' },
+                    px: { xs: 1, sm: 0 }
+                  }}
+                >
+                  Each ticket costs only $10 and you can buy as many as you want to
+                  increase your chances of winning. The contest is completely
+                  transparent and the winner will be drawn randomly and publicly.
                 </Typography>
 
-                {/* Link Twitter */}
+                {/* Twitter Link */}
                 <Button
                   href={`https://twitter.com/${twitterUsername}`}
                   target="_blank"
@@ -124,8 +113,9 @@ const AboutPage = () => {
                   sx={{
                     backgroundColor: '#1DA1F2',
                     color: 'white',
-                    px: 3,
-                    py: 1.5,
+                    px: { xs: 2, sm: 3 },
+                    py: { xs: 1, sm: 1.5 },
+                    fontSize: { xs: '0.9rem', sm: '1rem' },
                     fontWeight: 'bold',
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -138,61 +128,18 @@ const AboutPage = () => {
                     transition: 'all 0.3s ease'
                   }}
                 >
-                  <X sx={{ fontSize: 20 }} />
-                  Seguimi su Twitter
-                  <OpenInNew sx={{ fontSize: 16 }} />
+                  <Twitter sx={{ fontSize: { xs: 18, sm: 20 } }} />
+                  <Box sx={{ display: { xs: 'none', sm: 'block' } }}>Follow me on Twitter</Box>
+                  <Box sx={{ display: { xs: 'block', sm: 'none' } }}>Follow</Box>
+                  <OpenInNew sx={{ fontSize: { xs: 14, sm: 16 } }} />
                 </Button>
               </Box>
             </Box>
           </CardContent>
         </Card>
 
-        {/* Sezione Contest */}
-        <Card sx={{ borderRadius: 3, boxShadow: 4 }}>
-          <CardContent sx={{ p: 5 }}>
-            <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 4 }}>
-              Informazioni sul Contest
-            </Typography>
-            
-            <Grid container spacing={3}>
-              {contestInfo.map((info, index) => (
-                <Grid size={{ xs: 12, md: 6 }} key={index}>
-                  <Box
-                    sx={{
-                      backgroundColor: info.bgcolor,
-                      p: 4,
-                      borderRadius: 2,
-                      transition: 'transform 0.3s ease',
-                      '&:hover': {
-                        transform: 'translateY(-4px)'
-                      }
-                    }}
-                  >
-                    <Typography 
-                      variant="h6" 
-                      sx={{ 
-                        fontWeight: 'bold', 
-                        color: info.color,
-                        mb: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 1
-                      }}
-                    >
-                      {info.icon} {info.title}
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary">
-                      {info.description}
-                    </Typography>
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
-          </CardContent>
-        </Card>
-
         {/* Call to Action */}
-        <Box sx={{ textAlign: 'center', mt: 8 }}>
+        <Box sx={{ textAlign: 'center', mt: { xs: 6, sm: 7, md: 8 }, px: { xs: 1, sm: 0 } }}>
           <Button
             component={Link}
             to="/"
@@ -201,9 +148,9 @@ const AboutPage = () => {
             sx={{
               background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
               color: 'white',
-              px: 4,
-              py: 2,
-              fontSize: '1.125rem',
+              px: { xs: 3, sm: 4 },
+              py: { xs: 1.5, sm: 2 },
+              fontSize: { xs: '1rem', sm: '1.125rem' },
               fontWeight: 'bold',
               '&:hover': {
                 background: `linear-gradient(45deg, ${theme.palette.primary.dark}, ${theme.palette.primary.main})`,
@@ -213,7 +160,7 @@ const AboutPage = () => {
               transition: 'all 0.3s ease'
             }}
           >
-            🎮 Partecipa al Contest
+            🎮 Join the Contest
           </Button>
         </Box>
       </Container>

@@ -8,46 +8,98 @@ import {
   IconButton,
   Divider,
   CircularProgress,
-  useTheme
+  useTheme,
+  TextField,
+  Alert
 } from '@mui/material'
 import { 
   CreditCard, 
   Add, 
   Remove 
 } from '@mui/icons-material'
+import { stripeService, priceHelpers } from '../services/stripe'
+import { dbOperations } from '../services/database'
 
 interface PaymentButtonProps {
-  onPayment?: (tickets: number) => void
+  onPayment?: (tickets: { number: number; purchased: Date; paymentId: string }[]) => void
 }
 
 const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
   const theme = useTheme()
   const [ticketCount, setTicketCount] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [twitterHandle, setTwitterHandle] = useState('')
+  const [userEmail, setUserEmail] = useState('')
+  const [error, setError] = useState('')
   
-  const TICKET_PRICE = 10
-  const totalPrice = ticketCount * TICKET_PRICE
+  const totalPrice = priceHelpers.calculateTotal(ticketCount)
+  
+  // Controlla se tutti i campi sono compilati
+  const isFormValid = firstName.trim() && lastName.trim() && twitterHandle.trim() && userEmail.trim()
 
   const handlePayment = async () => {
+    if (!isFormValid) {
+      setError('Please fill in all fields')
+      return
+    }
+
     setIsLoading(true)
+    setError('')
     
-    // Simula il processo di pagamento
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      const fullName = `${firstName} ${lastName}`
       
-      // Genera un numero di biglietto casuale
-      const ticketNumbers = Array.from({ length: ticketCount }, () => 
-        Math.floor(Math.random() * 10000) + 1000
-      )
-      
-      alert(`🎉 Pagamento completato!\n\nBiglietti acquistati: ${ticketCount}\nNumeri assegnati: ${ticketNumbers.join(', ')}\nTotale: €${totalPrice}\n\nGrazie per aver partecipato al contest!`)
+      // Inizia il pagamento con Stripe
+      const paymentResult = await stripeService.initiatePayment({
+        amount: totalPrice,
+        ticketCount,
+        userEmail,
+        userName: fullName
+      })
+
+      if (!paymentResult.success) {
+        throw new Error(paymentResult.error || 'Payment failed')
+      }
+
+      // Genera i biglietti
+      const newTickets = Array.from({ length: ticketCount }, () => ({
+        number: dbOperations.generateTicketNumber(),
+        purchased: new Date(),
+        paymentId: paymentResult.paymentId || ''
+      }))
+
+      // Salva nel database (in un'app reale)
+      // for (const ticket of newTickets) {
+      //   await dbOperations.addTicket({
+      //     ticketNumber: ticket.number,
+      //     userId: dbOperations.generateUserId(),
+      //     userEmail,
+      //     userName: fullName,
+      //     twitterHandle,
+      //     paymentId: ticket.paymentId,
+      //     isActive: true
+      //   })
+      // }
+
+      alert(`🎉 Payment completed!\n\nName: ${fullName}\nTwitter: @${twitterHandle}\nEmail: ${userEmail}\n\nTickets: ${ticketCount}\nNumbers: ${newTickets.map(t => t.number).join(', ')}\nTotal: ${priceHelpers.formatPrice(totalPrice)}\n\nThank you!`)
       
       if (onPayment) {
-        onPayment(ticketCount)
+        onPayment(newTickets)
       }
+
+      // Reset form
+      setFirstName('')
+      setLastName('')
+      setTwitterHandle('')
+      setUserEmail('')
+      setTicketCount(1)
       
-    } catch {
-      alert('❌ Errore nel pagamento. Riprova più tardi.')
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Payment error. Please try again later.'
+      setError(errorMessage)
+      console.error('Payment error:', error)
     } finally {
       setIsLoading(false)
     }
@@ -69,7 +121,7 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
         background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)'
       }}
     >
-      <CardContent sx={{ p: 4 }}>
+      <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
         <Typography 
           variant="h4" 
           component="h3" 
@@ -78,49 +130,123 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
           sx={{ 
             fontWeight: 'bold',
             color: 'text.primary',
-            mb: 4
+            mb: { xs: 3, sm: 4 },
+            fontSize: { xs: '1.5rem', sm: '2rem', md: '2.125rem' }
           }}
         >
-          💳 Acquista Biglietti
+          💳 Buy Tickets
         </Typography>
-        
-        {/* Selettore quantità */}
-        <Box sx={{ mb: 4 }}>
+
+        {/* Error Alert */}
+        {error && (
+          <Alert severity="error" sx={{ mb: { xs: 2, sm: 3 } }}>
+            {error}
+          </Alert>
+        )}
+
+        {/* User Info Form */}
+        <Box sx={{ mb: { xs: 3, sm: 4 } }}>
           <Typography 
             variant="subtitle1" 
             sx={{ 
               fontWeight: 600, 
               color: 'text.primary',
               mb: 2,
-              textAlign: 'center'
+              textAlign: 'center',
+              fontSize: { xs: '1rem', sm: '1.1rem' }
             }}
           >
-            Numero di biglietti
+            Your Information
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+          
+          <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+            <TextField
+              fullWidth
+              label="First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              variant="outlined"
+              required
+            />
+            <TextField
+              fullWidth
+              label="Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              variant="outlined"
+              required
+            />
+          </Box>
+          
+          <TextField
+            fullWidth
+            label="Twitter Handle (without @)"
+            value={twitterHandle}
+            onChange={(e) => setTwitterHandle(e.target.value.replace('@', ''))}
+            variant="outlined"
+            placeholder="username"
+            sx={{ mb: 2 }}
+            required
+          />
+          
+          <TextField
+            fullWidth
+            label="Your Email"
+            type="email"
+            value={userEmail}
+            onChange={(e) => setUserEmail(e.target.value)}
+            variant="outlined"
+            required
+          />
+        </Box>
+        
+        {/* Quantity selector */}
+        <Box sx={{ mb: { xs: 3, sm: 4 } }}>
+          <Typography 
+            variant="subtitle1" 
+            sx={{ 
+              fontWeight: 600, 
+              color: 'text.primary',
+              mb: 2,
+              textAlign: 'center',
+              fontSize: { xs: '1rem', sm: '1.1rem' }
+            }}
+          >
+            Number of tickets
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: { xs: 1, sm: 2 } }}>
             <IconButton
               onClick={decrementTickets}
               disabled={ticketCount <= 1}
               sx={{
                 backgroundColor: 'grey.200',
                 '&:hover': { backgroundColor: 'grey.300' },
-                '&:disabled': { opacity: 0.5 }
+                '&:disabled': { opacity: 0.5 },
+                width: { xs: 40, sm: 48 },
+                height: { xs: 40, sm: 48 }
               }}
             >
-              <Remove />
+              <Remove sx={{ fontSize: { xs: 20, sm: 24 } }} />
             </IconButton>
             
             <Box
               sx={{
                 backgroundColor: 'grey.100',
-                px: 4,
-                py: 2,
+                px: { xs: 2, sm: 4 },
+                py: { xs: 1, sm: 2 },
                 borderRadius: 2,
-                minWidth: 80,
+                minWidth: { xs: 60, sm: 80 },
                 textAlign: 'center'
               }}
             >
-              <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'text.primary' }}>
+              <Typography 
+                variant="h4" 
+                sx={{ 
+                  fontWeight: 'bold', 
+                  color: 'text.primary',
+                  fontSize: { xs: '1.5rem', sm: '2.125rem' }
+                }}
+              >
                 {ticketCount}
               </Typography>
             </Box>
@@ -131,63 +257,102 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
               sx={{
                 backgroundColor: 'grey.200',
                 '&:hover': { backgroundColor: 'grey.300' },
-                '&:disabled': { opacity: 0.5 }
+                '&:disabled': { opacity: 0.5 },
+                width: { xs: 40, sm: 48 },
+                height: { xs: 40, sm: 48 }
               }}
             >
-              <Add />
+              <Add sx={{ fontSize: { xs: 20, sm: 24 } }} />
             </IconButton>
           </Box>
         </Box>
 
-        {/* Riepilogo prezzo */}
+        {/* Price summary */}
         <Box
           sx={{
             background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
             borderRadius: 2,
-            p: 3,
-            mb: 4
+            p: { xs: 2, sm: 3 },
+            mb: { xs: 3, sm: 4 }
           }}
         >
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <Typography color="text.secondary">Prezzo per biglietto:</Typography>
-            <Typography sx={{ fontWeight: 600 }}>€{TICKET_PRICE}</Typography>
+            <Typography 
+              color="text.secondary"
+              sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+            >
+              Price per ticket:
+            </Typography>
+            <Typography 
+              sx={{ 
+                fontWeight: 600,
+                fontSize: { xs: '0.875rem', sm: '1rem' }
+              }}
+            >
+              {priceHelpers.formatPrice(priceHelpers.TICKET_PRICE)}
+            </Typography>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-            <Typography color="text.secondary">Quantità:</Typography>
-            <Typography sx={{ fontWeight: 600 }}>{ticketCount}</Typography>
+            <Typography 
+              color="text.secondary"
+              sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+            >
+              Quantity:
+            </Typography>
+            <Typography 
+              sx={{ 
+                fontWeight: 600,
+                fontSize: { xs: '0.875rem', sm: '1rem' }
+              }}
+            >
+              {ticketCount}
+            </Typography>
           </Box>
           <Divider sx={{ my: 1 }} />
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Totale:</Typography>
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                fontWeight: 'bold',
+                fontSize: { xs: '1.1rem', sm: '1.25rem' }
+              }}
+            >
+              Total:
+            </Typography>
             <Typography 
               variant="h5" 
               sx={{ 
                 fontWeight: 'bold', 
-                color: theme.palette.primary.main 
+                color: theme.palette.primary.main,
+                fontSize: { xs: '1.3rem', sm: '1.5rem' }
               }}
             >
-              €{totalPrice}
+              {priceHelpers.formatPrice(totalPrice)}
             </Typography>
           </Box>
         </Box>
 
-        {/* Pulsante di pagamento */}
+        {/* Payment button */}
         <Button
           onClick={handlePayment}
-          disabled={isLoading}
+          disabled={isLoading || !isFormValid}
           fullWidth
           variant="contained"
           size="large"
           sx={{
-            py: 2,
-            fontSize: '1.125rem',
+            py: { xs: 1.5, sm: 2 },
+            fontSize: { xs: '1rem', sm: '1.125rem' },
             fontWeight: 'bold',
-            background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+            background: !isFormValid 
+              ? 'grey.400' 
+              : `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
             boxShadow: 3,
             '&:hover': {
-              background: `linear-gradient(45deg, ${theme.palette.primary.dark}, ${theme.palette.primary.main})`,
+              background: !isFormValid 
+                ? 'grey.400'
+                : `linear-gradient(45deg, ${theme.palette.primary.dark}, ${theme.palette.primary.main})`,
               boxShadow: 4,
-              transform: 'translateY(-2px)'
+              transform: !isFormValid ? 'none' : 'translateY(-2px)'
             },
             '&:disabled': {
               opacity: 0.6
@@ -198,23 +363,43 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
           {isLoading ? (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <CircularProgress size={20} sx={{ color: 'white' }} />
-              Elaborando...
+              <Typography sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }}>
+                Processing...
+              </Typography>
             </Box>
+          ) : !isFormValid ? (
+            <Typography sx={{ fontSize: { xs: '1rem', sm: '1.125rem' }, fontWeight: 'bold' }}>
+              Fill all fields to continue
+            </Typography>
           ) : (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <CreditCard />
-              Paga €{totalPrice}
+              <CreditCard sx={{ fontSize: { xs: 20, sm: 24 } }} />
+              <Typography sx={{ fontSize: { xs: '1rem', sm: '1.125rem' }, fontWeight: 'bold' }}>
+                Pay {priceHelpers.formatPrice(totalPrice)}
+              </Typography>
             </Box>
           )}
         </Button>
 
-        {/* Informazioni aggiuntive */}
-        <Box sx={{ mt: 3, textAlign: 'center' }}>
-          <Typography variant="body2" color="text.secondary">
-            🔒 Pagamento sicuro • 🎲 Numeri assegnati automaticamente
+        {/* Additional info */}
+        <Box sx={{ mt: { xs: 2, sm: 3 }, textAlign: 'center' }}>
+          <Typography 
+            variant="body2" 
+            color="text.secondary"
+            sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' } }}
+          >
+            🔒 Secure payment • 🎲 Numbers assigned automatically
           </Typography>
-          <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-            Più biglietti = maggiori probabilità di vincita!
+          <Typography 
+            variant="caption" 
+            color="text.secondary" 
+            sx={{ 
+              mt: 1, 
+              display: 'block',
+              fontSize: { xs: '0.7rem', sm: '0.75rem' }
+            }}
+          >
+            More tickets = higher chances to win!
           </Typography>
         </Box>
       </CardContent>

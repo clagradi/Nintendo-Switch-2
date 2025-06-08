@@ -4,7 +4,6 @@ import { CssBaseline, Box } from '@mui/material'
 import HomePage from './pages/HomePage'
 import AboutPage from './pages/AboutPage'
 import Navbar from './components/Navbar'
-import './App.css'
 
 // Tema personalizzato per Nintendo
 const theme = createTheme({
@@ -18,12 +17,12 @@ const theme = createTheme({
       contrastText: '#ffffff',
     },
     background: {
-      default: '#f5f5f5',
-      paper: '#ffffff',
+      default: 'transparent', // Trasparente per mostrare il gradiente CSS
+      paper: 'rgba(255, 255, 255, 0.9)',
     },
   },
   typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
     h1: {
       fontWeight: 700,
     },
@@ -36,22 +35,36 @@ const theme = createTheme({
     },
   },
   shape: {
-    borderRadius: 12,
+    borderRadius: 20, // Più moderno
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 12,
-          padding: '12px 24px',
+          borderRadius: 50, // Più moderno e arrotondato
+          padding: '14px 32px',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          '&:hover': {
+            transform: 'translateY(-2px)',
+            boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+          },
         },
       },
     },
     MuiCard: {
       styleOverrides: {
         root: {
-          borderRadius: 16,
-          boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+          borderRadius: 20,
+          boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+          backdropFilter: 'blur(10px)',
+          background: 'rgba(255, 255, 255, 0.9)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          '&:hover': {
+            transform: 'translateY(-4px)',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
+          },
         },
       },
     },
@@ -63,7 +76,16 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
-        <Box sx={{ minHeight: '100vh', backgroundColor: 'background.default' }}>
+        <Box 
+          className="fluid-container animated-gradient"
+          sx={{ 
+            minHeight: '100vh',
+            width: '100vw',
+            margin: 0,
+            padding: 0,
+            overflow: 'hidden'
+          }}
+        >
           <Navbar />
           <Routes>
             <Route path="/" element={<HomePage />} />
