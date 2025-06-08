@@ -8,7 +8,6 @@ import {
   IconButton,
   Divider,
   CircularProgress,
-  useTheme,
   TextField,
   Alert
 } from '@mui/material'
@@ -25,7 +24,6 @@ interface PaymentButtonProps {
 }
 
 const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
-  const theme = useTheme()
   const [ticketCount, setTicketCount] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
   const [firstName, setFirstName] = useState('')
@@ -114,52 +112,35 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
   }
 
   return (
-    <Card 
-      sx={{ 
-        borderRadius: 3, 
-        boxShadow: 4,
-        background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)'
-      }}
-    >
-      <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
+    <Card className="payment-card">
+      <CardContent sx={{ p: { xs: 1.5, sm: 2, md: 2.5 } }}>
         <Typography 
           variant="h4" 
           component="h3" 
           align="center" 
           gutterBottom
-          sx={{ 
-            fontWeight: 'bold',
-            color: 'text.primary',
-            mb: { xs: 3, sm: 4 },
-            fontSize: { xs: '1.5rem', sm: '2rem', md: '2.125rem' }
-          }}
+          className="payment-title"
         >
           💳 Buy Tickets
         </Typography>
 
         {/* Error Alert */}
         {error && (
-          <Alert severity="error" sx={{ mb: { xs: 2, sm: 3 } }}>
+          <Alert severity="error" sx={{ mb: { xs: 1.5, sm: 2 } }}>
             {error}
           </Alert>
         )}
 
         {/* User Info Form */}
-        <Box sx={{ mb: { xs: 3, sm: 4 } }}>
+        <Box sx={{ mb: { xs: 1.5, sm: 2 } }}>
           <Typography 
             variant="subtitle1" 
-            sx={{ 
-              fontWeight: 600, 
-              color: 'text.primary',
-              mb: 2,
-              textAlign: 'center',
-              fontSize: { xs: '1rem', sm: '1.1rem' }
-            }}
+            className="payment-section-title"
           >
             Your Information
           </Typography>
           
-          <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+          <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
             <TextField
               fullWidth
               label="First Name"
@@ -167,6 +148,7 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
               onChange={(e) => setFirstName(e.target.value)}
               variant="outlined"
               required
+              className="payment-input-field"
             />
             <TextField
               fullWidth
@@ -175,18 +157,20 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
               onChange={(e) => setLastName(e.target.value)}
               variant="outlined"
               required
+              className="payment-input-field"
             />
           </Box>
           
           <TextField
             fullWidth
-            label="Twitter Handle (without @)"
+            label="X Handle (without @)"
             value={twitterHandle}
             onChange={(e) => setTwitterHandle(e.target.value.replace('@', ''))}
             variant="outlined"
             placeholder="username"
-            sx={{ mb: 2 }}
+            sx={{ mb: 1 }}
             required
+            className="payment-input-field"
           />
           
           <TextField
@@ -197,55 +181,36 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
             onChange={(e) => setUserEmail(e.target.value)}
             variant="outlined"
             required
+            className="payment-input-field"
           />
         </Box>
         
         {/* Quantity selector */}
-        <Box sx={{ mb: { xs: 3, sm: 4 } }}>
+        <Box className="payment-quantity-selector">
           <Typography 
             variant="subtitle1" 
-            sx={{ 
-              fontWeight: 600, 
-              color: 'text.primary',
-              mb: 2,
-              textAlign: 'center',
-              fontSize: { xs: '1rem', sm: '1.1rem' }
-            }}
+            className="payment-section-title"
+            sx={{ mb: 0.25 }}
           >
             Number of tickets
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: { xs: 1, sm: 2 } }}>
+          <Box className="payment-quantity-controls" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: { xs: 1, sm: 1.5 } }}>
             <IconButton
               onClick={decrementTickets}
               disabled={ticketCount <= 1}
+              className="payment-quantity-button payment-quantity-button-override"
               sx={{
-                backgroundColor: 'grey.200',
-                '&:hover': { backgroundColor: 'grey.300' },
-                '&:disabled': { opacity: 0.5 },
-                width: { xs: 40, sm: 48 },
-                height: { xs: 40, sm: 48 }
+                width: { xs: 36, sm: 44 },
+                height: { xs: 36, sm: 44 }
               }}
             >
-              <Remove sx={{ fontSize: { xs: 20, sm: 24 } }} />
+              <Remove sx={{ fontSize: { xs: 18, sm: 22 } }} />
             </IconButton>
             
-            <Box
-              sx={{
-                backgroundColor: 'grey.100',
-                px: { xs: 2, sm: 4 },
-                py: { xs: 1, sm: 2 },
-                borderRadius: 2,
-                minWidth: { xs: 60, sm: 80 },
-                textAlign: 'center'
-              }}
-            >
+            <Box className="payment-quantity-display">
               <Typography 
                 variant="h4" 
-                sx={{ 
-                  fontWeight: 'bold', 
-                  color: 'text.primary',
-                  fontSize: { xs: '1.5rem', sm: '2.125rem' }
-                }}
+                className="payment-quantity-number"
               >
                 {ticketCount}
               </Typography>
@@ -254,29 +219,20 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
             <IconButton
               onClick={incrementTickets}
               disabled={ticketCount >= 10}
+              className="payment-quantity-button payment-quantity-button-override"
               sx={{
-                backgroundColor: 'grey.200',
-                '&:hover': { backgroundColor: 'grey.300' },
-                '&:disabled': { opacity: 0.5 },
-                width: { xs: 40, sm: 48 },
-                height: { xs: 40, sm: 48 }
+                width: { xs: 36, sm: 44 },
+                height: { xs: 36, sm: 44 }
               }}
             >
-              <Add sx={{ fontSize: { xs: 20, sm: 24 } }} />
+              <Add sx={{ fontSize: { xs: 18, sm: 22 } }} />
             </IconButton>
           </Box>
         </Box>
 
         {/* Price summary */}
-        <Box
-          sx={{
-            background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
-            borderRadius: 2,
-            p: { xs: 2, sm: 3 },
-            mb: { xs: 3, sm: 4 }
-          }}
-        >
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+        <Box className="payment-summary payment-summary-override" sx={{ mb: { xs: 2, sm: 2.5 }, p: { xs: 1.5, sm: 2 } }}>
+          <Box className="payment-summary-row">
             <Typography 
               color="text.secondary"
               sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
@@ -292,7 +248,7 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
               {priceHelpers.formatPrice(priceHelpers.TICKET_PRICE)}
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+          <Box className="payment-summary-row">
             <Typography 
               color="text.secondary"
               sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
@@ -308,8 +264,8 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
               {ticketCount}
             </Typography>
           </Box>
-          <Divider sx={{ my: 1 }} />
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Divider sx={{ my: 0.5 }} />
+          <Box className="payment-summary-total">
             <Typography 
               variant="h6" 
               sx={{ 
@@ -323,7 +279,7 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
               variant="h5" 
               sx={{ 
                 fontWeight: 'bold', 
-                color: theme.palette.primary.main,
+                color: '#8B7DB8',
                 fontSize: { xs: '1.3rem', sm: '1.5rem' }
               }}
             >
@@ -339,25 +295,11 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
           fullWidth
           variant="contained"
           size="large"
+          className="payment-button payment-button-override"
           sx={{
             py: { xs: 1.5, sm: 2 },
             fontSize: { xs: '1rem', sm: '1.125rem' },
-            fontWeight: 'bold',
-            background: !isFormValid 
-              ? 'grey.400' 
-              : `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
-            boxShadow: 3,
-            '&:hover': {
-              background: !isFormValid 
-                ? 'grey.400'
-                : `linear-gradient(45deg, ${theme.palette.primary.dark}, ${theme.palette.primary.main})`,
-              boxShadow: 4,
-              transform: !isFormValid ? 'none' : 'translateY(-2px)'
-            },
-            '&:disabled': {
-              opacity: 0.6
-            },
-            transition: 'all 0.3s ease'
+            fontWeight: 'bold'
           }}
         >
           {isLoading ? (
@@ -382,7 +324,7 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
         </Button>
 
         {/* Additional info */}
-        <Box sx={{ mt: { xs: 2, sm: 3 }, textAlign: 'center' }}>
+        <Box className="payment-info">
           <Typography 
             variant="body2" 
             color="text.secondary"
@@ -393,11 +335,7 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
           <Typography 
             variant="caption" 
             color="text.secondary" 
-            sx={{ 
-              mt: 1, 
-              display: 'block',
-              fontSize: { xs: '0.7rem', sm: '0.75rem' }
-            }}
+            className="payment-tip"
           >
             More tickets = higher chances to win!
           </Typography>

@@ -1,0 +1,345 @@
+/* =================================================================== */
+/* COMPONENTI SPECIFICHE - CSS SEPARATO */
+/* =================================================================== */
+
+/* =================================================================== */
+/* NAVBAR COMPONENT STYLES */
+/* =================================================================== */
+
+.navbar {
+  background: #E60012;
+  backdrop-filter: blur(15px);
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: all 0.9s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.navbar:hover {
+  background: #E60012;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.navbar-logo-icon {
+  width: 32px;
+  height: 32px;
+  background: rgba(72, 61, 139, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(72, 61, 139, 0.3);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.9s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.navbar-logo-icon:hover {
+  background: rgba(72, 61, 139, 0.3);
+  transform: scale(1.1);
+  box-shadow: 0 8px 20px rgba(72, 61, 139, 0.3);
+}
+
+.navbar-title {
+  font-weight: bold;
+  color: #e8eaed;
+  font-size: 1.25rem;
+}
+
+.navbar-title-mobile {
+  font-weight: bold;
+  color: #e8eaed;
+  font-size: 0.9rem;
+}
+
+.navbar-about-link {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.9s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.navbar-about-link:hover {
+  color: #483d8b;
+  background-color: rgba(72, 61, 139, 0.1);
+  transform: translateY(-2px);
+}
+
+/* =================================================================== */
+/* PAYMENT BUTTON COMPONENT STYLES */
+/* =================================================================== */
+
+.payment-card {
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.9s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.payment-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.05) 100%);
+  pointer-events: none;
+}
+
+.payment-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.payment-title {
+  font-weight: bold;
+  color: #e8eaed;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: clamp(1.5rem, 3vw, 2.125rem);
+}
+
+/* Form sections spacing - Compatto */
+.payment-section-title {
+  font-weight: 600;
+  color: #e8eaed;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  font-size: clamp(1rem, 2vw, 1.1rem);
+}
+
+.payment-input {
+  margin-bottom: 0.5rem;
+}
+
+.payment-quantity-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.payment-quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.payment-quantity-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #e8eaed;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  transition: all 0.9s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.payment-quantity-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.payment-quantity-button:disabled {
+  opacity: 0.5;
+}
+
+.payment-quantity-display {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  min-width: 70px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.payment-quantity-number {
+  font-weight: bold;
+  color: #e8eaed;
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+}
+
+.payment-summary {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.payment-summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.payment-summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  color: #e8eaed;
+  font-size: 1.25rem;
+}
+
+.payment-button {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.125rem;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: all 0.9s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.payment-button:disabled {
+  opacity: 0.6;
+  background: rgba(128, 128, 128, 0.4);
+}
+
+.payment-info {
+  margin-top: 1rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+}
+
+.payment-tip {
+  margin-top: 0.25rem;
+  display: block;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Payment form input styles */
+.payment-input-field .MuiOutlinedInput-root {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  transition: all 0.9s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.payment-input-field .MuiOutlinedInput-root:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.payment-input-field .MuiOutlinedInput-root.Mui-focused {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.payment-input-field .MuiInputLabel-root {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.payment-input-field .MuiInputLabel-root.Mui-focused {
+  color: #483d8b;
+}
+
+.payment-input-field .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.payment-input-field .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.payment-input-field .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #483d8b;
+}
+
+.payment-input-field .MuiInputBase-input {
+  color: #e8eaed;
+}
+
+/* Quantity selector buttons override */
+.payment-quantity-button-override {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #e8eaed !important;
+  transition: all 0.9s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+.payment-quantity-button-override:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  transform: scale(1.1) !important;
+}
+
+.payment-quantity-button-override:disabled {
+  opacity: 0.5 !important;
+}
+
+/* Payment summary override */
+.payment-summary-override {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+}
+
+/* Payment button styles override */
+.payment-button-override {
+  background: linear-gradient(45deg, #483d8b, #2f4f4f) !important;
+  transition: all 0.9s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+.payment-button-override:hover {
+  background: linear-gradient(45deg, #2f4f4f, #483d8b) !important;
+  transform: translateY(-2px) !important;
+}
+
+.payment-button-override:disabled {
+  opacity: 0.6 !important;
+  background: rgba(128, 128, 128, 0.4) !important;
+}
+
+.payment-button-override:disabled:hover {
+  transform: none !important;
+}
+
+/* Payment quantity selector spacing - Compatto */
+.payment-quantity-selector {
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 599px) {
+  .payment-quantity-selector {
+    margin-bottom: 0.75rem;
+  }
+  
+  .payment-quantity-button {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (min-width: 600px) {
+  .payment-quantity-selector {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (min-width: 960px) {
+  .payment-quantity-selector {
+    margin-bottom: 1.25rem;
+  }
+}

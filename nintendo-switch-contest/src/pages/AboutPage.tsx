@@ -1,5 +1,5 @@
 import { Typography, Box, Card, CardContent, Button, Avatar, Container, useTheme } from '@mui/material'
-import { Twitter, OpenInNew } from '@mui/icons-material'
+import { OpenInNew } from '@mui/icons-material'
 import { Link } from 'react-router-dom'
 
 const AboutPage = () => {
@@ -84,9 +84,9 @@ const AboutPage = () => {
                     px: { xs: 1, sm: 0 }
                   }}
                 >
-                  Welcome to my contest to win a Nintendo Switch 2!
-                  I'm passionate about gaming and technology, and I decided to organize
-                  this contest to share my passion with the community.
+                  I'm a developer who builds innovative solutions.
+                  I wanted to create this contest to bring happiness to someone
+                  and share my passion for gaming with the community.
                 </Typography>
                 <Typography 
                   variant="h6" 
@@ -105,14 +105,14 @@ const AboutPage = () => {
 
                 {/* X Link */}
                 <Button
-                  href={`https://twitter.com/${xUsername}`}
+                  href={`https://x.com/${xUsername}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   variant="contained"
                   size="large"
                   sx={{
-                    backgroundColor: '#1DA1F2',
-                    color: 'white',
+                    backgroundColor: '#1a1a2e',
+                    color: '#e8eaed',
                     px: { xs: 2, sm: 3 },
                     py: { xs: 1, sm: 1.5 },
                     fontSize: { xs: '0.9rem', sm: '1rem' },
@@ -121,16 +121,27 @@ const AboutPage = () => {
                     alignItems: 'center',
                     gap: 1,
                     '&:hover': {
-                      backgroundColor: '#1a8cd8',
+                      backgroundColor: '#2a2a3e',
                       transform: 'translateY(-2px)',
                       boxShadow: 4
                     },
                     transition: 'all 0.3s ease'
                   }}
                 >
-                  <Twitter sx={{ fontSize: { xs: 18, sm: 20 } }} />
-                  <Box sx={{ display: { xs: 'none', sm: 'block' } }}>Follow me on X</Box>
+                  <Box sx={{ display: { xs: 'none', sm: 'block' } }}>Follow me on</Box>
                   <Box sx={{ display: { xs: 'block', sm: 'none' } }}>Follow</Box>
+                  <Box 
+                    sx={{ 
+                      fontSize: { xs: 18, sm: 20 },
+                      fontWeight: 'bold',
+                      fontFamily: 'monospace',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    𝕏
+                  </Box>
                   <OpenInNew sx={{ fontSize: { xs: 14, sm: 16 } }} />
                 </Button>
               </Box>
