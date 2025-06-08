@@ -68,18 +68,32 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
         paymentId: paymentResult.paymentId || ''
       }))
 
-      // Salva nel database (in un'app reale)
-      // for (const ticket of newTickets) {
-      //   await dbOperations.addTicket({
-      //     ticketNumber: ticket.number,
-      //     userId: dbOperations.generateUserId(),
-      //     userEmail,
-      //     userName: fullName,
-      //     twitterHandle,
-      //     paymentId: ticket.paymentId,
-      //     isActive: true
-      //   })
-      // }
+      // Save data in Firestore
+      const userId = await dbOperations.addUser({
+        email: userEmail,
+        name: fullName
+      })
+
+      await dbOperations.addPayment({
+        userId,
+        userEmail,
+        amount: totalPrice,
+        ticketCount,
+        stripePaymentId: paymentResult.paymentId || '',
+        status: 'completed'
+      })
+
+      for (const ticket of newTickets) {
+        await dbOperations.addTicket({
+          ticketNumber: ticket.number,
+          userId,
+          userEmail,
+          userName: fullName,
+          twitterHandle,
+          paymentId: ticket.paymentId,
+          isActive: true
+        })
+      }
 
       alert(`🎉 Payment completed!\n\nName: ${fullName}\nTwitter: @${twitterHandle}\nEmail: ${userEmail}\n\nTickets: ${ticketCount}\nNumbers: ${newTickets.map(t => t.number).join(', ')}\nTotal: ${priceHelpers.formatPrice(totalPrice)}\n\nThank you!`)
       
