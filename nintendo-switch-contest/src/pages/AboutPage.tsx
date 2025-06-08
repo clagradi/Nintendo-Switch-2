@@ -103,9 +103,9 @@ const AboutPage = () => {
                   transparent and the winner will be drawn randomly and publicly.
                 </Typography>
 
-                {/* Twitter Link */}
+                {/* X Link */}
                 <Button
-                  href={`https://twitter.com/${twitterUsername}`}
+                  href={`https://twitter.com/${xUsername}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   variant="contained"
@@ -129,7 +129,7 @@ const AboutPage = () => {
                   }}
                 >
                   <Twitter sx={{ fontSize: { xs: 18, sm: 20 } }} />
-                  <Box sx={{ display: { xs: 'none', sm: 'block' } }}>Follow me on Twitter</Box>
+                  <Box sx={{ display: { xs: 'none', sm: 'block' } }}>Follow me on X</Box>
                   <Box sx={{ display: { xs: 'block', sm: 'none' } }}>Follow</Box>
                   <OpenInNew sx={{ fontSize: { xs: 14, sm: 16 } }} />
                 </Button>
