@@ -177,109 +177,110 @@ const HomePage = () => {
         </CardContent>
       </Card>
 
-      {/* Payment and Tickets Section */}
+      {/* Payment Section Centered */}
       <Box sx={{ 
-        display: 'grid', 
-        gridTemplateColumns: { xs: '1fr', lg: '1fr 1fr' }, 
-        gap: { xs: 2, sm: 3 }, 
+        display: 'flex', 
+        justifyContent: 'center', 
         px: { xs: 1, sm: 0 } 
       }}>
-        {/* Payment Section */}
-        <Box>
+        <Box sx={{ 
+          width: '100%', 
+          maxWidth: 500 
+        }}>
           <PaymentButton onPayment={handlePayment} />
-        </Box>
-
-        {/* Your Tickets */}
-        {userTickets.length > 0 && (
-          <Box>
-            <Card className="tickets-card">
-              <CardContent sx={{ p: { xs: 1.5, sm: 2, md: 2.5 } }}>
-                <Typography 
-                  variant="h4" 
-                  align="center" 
-                  gutterBottom 
-                  className="tickets-title"
-                >
-                  🎫 Your Tickets
-                </Typography>
-                <Box sx={{ maxHeight: { xs: 300, sm: 400 }, overflowY: 'auto' }}>
-                  {userTickets.map((ticket, index) => (
-                    <Card 
-                      key={index}
-                      className="ticket-item"
-                    >
-                      <CardContent sx={{ p: { xs: 1.5, sm: 2 }, '&:last-child': { pb: { xs: 1.5, sm: 2 } } }}>
-                        <Box sx={{ 
-                          display: 'flex', 
-                          justifyContent: 'space-between', 
-                          alignItems: 'center',
-                          flexDirection: { xs: 'column', sm: 'row' },
-                          gap: { xs: 1, sm: 0 }
-                        }}>
-                          <Box sx={{ textAlign: { xs: 'center', sm: 'left' } }}>
-                            <Typography 
-                              variant="h6" 
-                              className="ticket-number"
-                            >
-                              Ticket #{ticket.number}
-                            </Typography>
-                            <Typography 
-                              variant="body2" 
-                              className="ticket-date"
-                            >
-                              Purchased: {ticket.purchased.toLocaleString('en-GB')}
-                            </Typography>
-                          </Box>
-                          <Chip
-                            label="Active"
-                            size="small"
-                            className="ticket-chip"
-                          />
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </Box>
-                <Box className="ticket-summary">
+          {userTickets.length > 0 && (
+            <Box sx={{ mt: 3 }}>
+              <Card className="tickets-card">
+                <CardContent sx={{ p: { xs: 1.5, sm: 2, md: 2.5 } }}>
                   <Typography 
-                    variant="body2" 
-                    sx={{
-                      fontSize: { xs: '0.8rem', sm: '0.875rem' }
-                    }}
+                    variant="h4" 
+                    align="center" 
+                    gutterBottom 
+                    className="tickets-title"
                   >
-                    Total tickets: <strong>{userTickets.length}</strong> |
-                    Investment: <strong>${userTickets.length * 10}</strong>
+                    🎫 Your Tickets
                   </Typography>
-                </Box>
-              </CardContent>
-            </Card>
-          </Box>
-        )}
-      </Box>        {/* Final Call to Action */}
-        <Box sx={{ textAlign: 'center', mt: { xs: 6, sm: 7, md: 8 }, px: { xs: 1, sm: 0 } }}>
-          <Card className="cta-card">
-            <CardContent sx={{ p: { xs: 3, sm: 4, md: 5 } }}>
-              <Typography 
-                variant="h4" 
-                className="cta-title"
-              >
-                🔥 Don't miss this opportunity!
-              </Typography>
-              <Typography 
-                variant="h6" 
-                className="cta-subtitle"
-              >
-                The contest ends soon and spots are limited!
-              </Typography>
-              <Typography 
-                variant="body2" 
-                className="cta-description"
-              >
-                Follow updates in the "About" section so you don't miss the draw!
-              </Typography>
-            </CardContent>
-          </Card>
+                  <Box sx={{ maxHeight: { xs: 300, sm: 400 }, overflowY: 'auto' }}>
+                    {userTickets.map((ticket, index) => (
+                      <Card 
+                        key={index}
+                        className="ticket-item"
+                      >
+                        <CardContent sx={{ p: { xs: 1.5, sm: 2 }, '&:last-child': { pb: { xs: 1.5, sm: 2 } } }}>
+                          <Box sx={{ 
+                            display: 'flex', 
+                            justifyContent: 'space-between', 
+                            alignItems: 'center',
+                            flexDirection: { xs: 'column', sm: 'row' },
+                            gap: { xs: 1, sm: 0 }
+                          }}>
+                            <Box sx={{ textAlign: { xs: 'center', sm: 'left' } }}>
+                              <Typography 
+                                variant="h6" 
+                                className="ticket-number"
+                              >
+                                Ticket #{ticket.number}
+                              </Typography>
+                              <Typography 
+                                variant="body2" 
+                                className="ticket-date"
+                              >
+                                Purchased: {ticket.purchased.toLocaleString('en-GB')}
+                              </Typography>
+                            </Box>
+                            <Chip
+                              label="Active"
+                              size="small"
+                              className="ticket-chip"
+                            />
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </Box>
+                  <Box className="ticket-summary">
+                    <Typography 
+                      variant="body2" 
+                      sx={{
+                        fontSize: { xs: '0.8rem', sm: '0.875rem' }
+                      }}
+                    >
+                      Total tickets: <strong>{userTickets.length}</strong> |
+                      Investment: <strong>${userTickets.length * 10}</strong>
+                    </Typography>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Box>
+          )}
         </Box>
+      </Box>
+
+      {/* Final Call to Action */}
+      <Box sx={{ textAlign: 'center', mt: { xs: 6, sm: 7, md: 8 }, px: { xs: 1, sm: 0 } }}>
+        <Card className="cta-card">
+          <CardContent sx={{ p: { xs: 3, sm: 4, md: 5 } }}>
+            <Typography 
+              variant="h4" 
+              className="cta-title"
+            >
+              🔥 Don't miss this opportunity!
+            </Typography>
+            <Typography 
+              variant="h6" 
+              className="cta-subtitle"
+            >
+              The contest ends soon and spots are limited!
+            </Typography>
+            <Typography 
+              variant="body2" 
+              className="cta-description"
+            >
+              Follow updates in the "About" section so you don't miss the draw!
+            </Typography>
+          </CardContent>
+        </Card>
+      </Box>
     </Box>
   )
 }

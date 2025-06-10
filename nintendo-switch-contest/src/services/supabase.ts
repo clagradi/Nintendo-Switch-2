@@ -22,6 +22,7 @@ export interface Participant {
   nome: string
   cognome: string
   email: string
+  twitter_handle: string
   numero_biglietto: string
   importo: number               // in euro
   ticket_count: number
@@ -34,7 +35,10 @@ export async function saveParticipant(data: Participant) {
       .from('participants')
       .insert(
         [
-          { ...data }
+          {
+            ...data,
+            stato_pagamento: 'completed' // colonna presente nel DB
+          }
         ]
       )
       .select()
