@@ -1,82 +1,77 @@
+/* ------------------------------------------------------------------
+   Stripe service – production implementation (Checkout redirect)
+   ------------------------------------------------------------------ */
+
 import { loadStripe } from '@stripe/stripe-js'
 
-// Chiave pubblica di Stripe (usa le variabili d'ambiente)
+/**
+ * Publishable key – only the pk_* value is exposed to the browser.
+ * The secret key must live in the serverless function environment.
+ */
 const stripePromise = loadStripe(
-  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_your_stripe_publishable_key_here'
+  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY as string
 )
 
+/* ------------------------------------------------------------------ */
+
 export interface PaymentData {
-  amount: number
   ticketCount: number
   userEmail: string
   userName: string
+  amount: number // cents – derived from priceHelpers
+}
+
+interface CheckoutSessionResponse {
+  url: string
 }
 
 export const stripeService = {
-  // Inizializza il pagamento
+  /**
+   * Create a Stripe Checkout Session via backend and redirect the user.
+   */
   async initiatePayment(paymentData: PaymentData) {
     try {
       const stripe = await stripePromise
-      
-      if (!stripe) {
-        throw new Error('Stripe non è stato caricato correttamente')
+      if (!stripe) throw new Error('Stripe JS failed to load')
+
+      // Call backend route that creates the Checkout session
+      const res = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(paymentData)
+      })
+
+      if (!res.ok) {
+        const msg = await res.text()
+        throw new Error(`Backend error: ${msg}`)
       }
 
-      // In una app reale, questo dovrebbe chiamare il tuo backend
-      // che crea una sessione di pagamento con Stripe
-      
-      // Per ora simuliamo il processo
-      console.log('Iniziando pagamento con dati:', paymentData)
-      
-      // Simula un delay del pagamento
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
-      // Simula successo (nell'app reale gestirai i veri pagamenti Stripe)
-      return {
-        success: true,
-        paymentId: `payment_${Date.now()}`,
-        amount: paymentData.amount,
-        ticketCount: paymentData.ticketCount
-      }
-      
-    } catch (error) {
-      console.error('Errore nel pagamento:', error)
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Errore sconosciuto'
-      }
+      const { url } = (await res.json()) as CheckoutSessionResponse
+      window.location.href = url // Hard redirect to Stripe Checkout
+      return { success: true }
+    } catch (err) {
+      console.error('Stripe payment error:', err)
+      return { success: false, error: err instanceof Error ? err.message : 'Unknown error' }
     }
   },
 
-  // Verifica lo stato del pagamento
-  async verifyPayment(paymentId: string) {
-    try {
-      // In una app reale, verificheresti con Stripe
-      console.log('Verificando pagamento:', paymentId)
-      
-      return {
-        success: true,
-        status: 'completed'
-      }
-    } catch (error) {
-      console.error('Errore verificando pagamento:', error)
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Errore sconosciuto'
-      }
-    }
+  /** Stub – you can extend with real webhook polling if needed. */
+  async verifyPayment(): Promise<{ success: boolean; status: string }> {
+    return { success: true, status: 'pending' }
   }
 }
 
-// Funzioni helper per il prezzo
+/* ------------------------------------------------------------------
+   Price helpers in cents to avoid floating point precision issues
+   ------------------------------------------------------------------ */
 export const priceHelpers = {
-  TICKET_PRICE: Number(import.meta.env.VITE_TICKET_PRICE) || 10, // $10 per biglietto
-  
+  TICKET_PRICE: (Number(import.meta.env.VITE_TICKET_PRICE) || 10) * 100, // €10 -> 1000 cents
+
   calculateTotal(ticketCount: number): number {
     return ticketCount * this.TICKET_PRICE
   },
-  
-  formatPrice(amount: number): string {
-    return `$${amount.toFixed(2)}`
+
+  formatPrice(cents: number): string {
+    return `€ ${(cents / 100).toFixed(2)}`
   }
 }

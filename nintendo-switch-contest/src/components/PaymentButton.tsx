@@ -20,7 +20,7 @@ import { stripeService, priceHelpers } from '../services/stripe'
 import { saveParticipant, generateTicketNumber } from '../services/supabase'
 
 interface PaymentButtonProps {
-  onPayment?: (tickets: { number: number; purchased: Date; paymentId: string }[]) => void
+  onPayment?: (tickets: { number: string; purchased: Date }[]) => void
 }
 
 const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
@@ -70,7 +70,8 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
         cognome: lastName,
         email: userEmail,
         numero_biglietto: ticketNumber,
-        importo: totalPrice
+        importo: totalPrice,
+        ticket_count: ticketCount
       })
 
       if (!dbResult.success) {
@@ -78,10 +79,9 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
       }
 
       // Genera i biglietti per la UI locale
-      const newTickets = Array.from({ length: ticketCount }, (_, index) => ({
-        number: parseInt(ticketNumber.replace('NS-', '')) + index,
-        purchased: new Date(),
-        paymentId: paymentResult.paymentId || ''
+      const newTickets = Array.from({ length: ticketCount }, () => ({
+        number: ticketNumber,
+        purchased: new Date()
       }))
 
       alert(`🎉 Payment completed!\n\nName: ${fullName}\nEmail: ${userEmail}\n\nTicket Number: ${ticketNumber}\nAmount: ${priceHelpers.formatPrice(totalPrice)}\n\nThank you for participating!`)
