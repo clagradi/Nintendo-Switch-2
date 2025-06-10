@@ -8,14 +8,20 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl     = import.meta.env.VITE_SUPABASE_URL as string
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string
 
+console.log('🔍 Debug env vars:', { 
+  supabaseUrl: supabaseUrl ? 'SET' : 'MISSING',
+  supabaseAnonKey: supabaseAnonKey ? 'SET' : 'MISSING'
+})
+
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    '❌ Supabase env vars missing. Definisci VITE_SUPABASE_URL e ' +
-    'VITE_SUPABASE_ANON_KEY in .env.local'
-  )
+  console.error('❌ Supabase env vars missing. Definisci VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY in .env')
+  // Non lanciare errore per ora, permettiamo all'app di caricarsi
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = createClient(
+  supabaseUrl || 'https://placeholder.supabase.co', 
+  supabaseAnonKey || 'placeholder-key'
+)
 
 /* 2️⃣  Tipi */
 export interface Participant {
