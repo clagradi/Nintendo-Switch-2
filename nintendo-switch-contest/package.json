@@ -7,24 +7,20 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.1.1",
-    "@mui/lab": "^7.0.0-beta.13",
     "@mui/material": "^7.1.1",
     "@mui/system": "^7.1.1",
     "@stripe/stripe-js": "^7.3.1",
-    "@types/uuid": "^10.0.0",
-    "firebase": "^11.9.0",
-    "lucide-react": "^0.513.0",
+    "@supabase/supabase-js": "^2.50.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-hot-toast": "^2.5.2",
-    "react-router-dom": "^7.6.2",
-    "uuid": "^11.1.0"
+    "react-router-dom": "^7.6.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

@@ -8,6 +8,7 @@ import Navbar from './components/Navbar'
 // Tema personalizzato per Nintendo
 const theme = createTheme({
   palette: {
+    mode: 'dark', // Imposta la modalità scura
     primary: {
       main: '#E60012', // Nintendo Red
       contrastText: '#ffffff',
@@ -18,7 +19,11 @@ const theme = createTheme({
     },
     background: {
       default: 'transparent', // Trasparente per mostrare il gradiente CSS
-      paper: 'rgba(255, 255, 255, 0.9)',
+      paper: 'rgba(255, 255, 255, 0.1)',
+    },
+    text: {
+      primary: '#e8eaed', // Testo principale bianco/grigio chiaro
+      secondary: 'rgba(255, 255, 255, 0.8)', // Testo secondario
     },
   },
   typography: {

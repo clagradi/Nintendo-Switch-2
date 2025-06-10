@@ -17,7 +17,7 @@ import {
   Remove 
 } from '@mui/icons-material'
 import { stripeService, priceHelpers } from '../services/stripe'
-import { dbOperations } from '../services/database'
+import { saveParticipant, generateTicketNumber } from '../services/supabase'
 
 interface PaymentButtonProps {
   onPayment?: (tickets: { number: number; purchased: Date; paymentId: string }[]) => void
@@ -49,7 +49,7 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
     try {
       const fullName = `${firstName} ${lastName}`
       
-      // Inizia il pagamento con Stripe
+      // Simula pagamento Stripe
       const paymentResult = await stripeService.initiatePayment({
         amount: totalPrice,
         ticketCount,
@@ -61,27 +61,30 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
         throw new Error(paymentResult.error || 'Payment failed')
       }
 
-      // Genera i biglietti
-      const newTickets = Array.from({ length: ticketCount }, () => ({
-        number: dbOperations.generateTicketNumber(),
+      // Genera numero biglietto unico
+      const ticketNumber = generateTicketNumber()
+
+      // Salva nel database Supabase
+      const dbResult = await saveParticipant({
+        nome: firstName,
+        cognome: lastName,
+        email: userEmail,
+        numero_biglietto: ticketNumber,
+        importo: totalPrice
+      })
+
+      if (!dbResult.success) {
+        throw new Error(dbResult.error || 'Failed to save participant data')
+      }
+
+      // Genera i biglietti per la UI locale
+      const newTickets = Array.from({ length: ticketCount }, (_, index) => ({
+        number: parseInt(ticketNumber.replace('NS-', '')) + index,
         purchased: new Date(),
         paymentId: paymentResult.paymentId || ''
       }))
 
-      // Salva nel database (in un'app reale)
-      // for (const ticket of newTickets) {
-      //   await dbOperations.addTicket({
-      //     ticketNumber: ticket.number,
-      //     userId: dbOperations.generateUserId(),
-      //     userEmail,
-      //     userName: fullName,
-      //     twitterHandle,
-      //     paymentId: ticket.paymentId,
-      //     isActive: true
-      //   })
-      // }
-
-      alert(`🎉 Payment completed!\n\nName: ${fullName}\nTwitter: @${twitterHandle}\nEmail: ${userEmail}\n\nTickets: ${ticketCount}\nNumbers: ${newTickets.map(t => t.number).join(', ')}\nTotal: ${priceHelpers.formatPrice(totalPrice)}\n\nThank you!`)
+      alert(`🎉 Payment completed!\n\nName: ${fullName}\nEmail: ${userEmail}\n\nTicket Number: ${ticketNumber}\nAmount: ${priceHelpers.formatPrice(totalPrice)}\n\nThank you for participating!`)
       
       if (onPayment) {
         onPayment(newTickets)
@@ -181,6 +184,7 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
             onChange={(e) => setUserEmail(e.target.value)}
             variant="outlined"
             required
+            sx={{ mb: 1 }}
             className="payment-input-field"
           />
         </Box>

@@ -8,13 +8,75 @@
 body {
   font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
   line-height: 1.6;
-  color: #e8eaed;
+  color: #e8eaed !important;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
   min-height: 100vh;
   /* Miglioramenti per mobile */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   touch-action: manipulation;
+}
+
+/* Forza tutti i testi ad essere bianchi/grigi chiari */
+* {
+  color: inherit !important;
+}
+
+/* Override specifici per Material-UI */
+.MuiTypography-root {
+  color: #e8eaed !important;
+}
+
+.MuiInputLabel-root {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.MuiOutlinedInput-input {
+  color: #e8eaed !important;
+}
+
+/* Assicura che tutti i componenti text usino il colore corretto */
+p, h1, h2, h3, h4, h5, h6, span, div, label, input, textarea, button {
+  color: #e8eaed !important;
+}
+
+/* Regole specifiche per testo secondario */
+.MuiTypography-colorTextSecondary {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Helpers di testo e stati */
+.MuiFormHelperText-root {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.MuiInputBase-input::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Alert e messaggi */
+.MuiAlert-message {
+  color: #333 !important;
+}
+
+/* Chip e badge */
+.MuiChip-label {
+  color: inherit !important;
+}
+
+/* Link e bottoni di testo */
+a, .MuiButton-text {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Override per elementi che potrebbero avere testo nero */
+.MuiCardContent-root * {
+  color: #e8eaed !important;
+}
+
+/* Specifico per il nostro container principale */
+#root, .main-container {
+  color: #e8eaed !important;
 }
 
 /* Miglioramenti per la responsività */
