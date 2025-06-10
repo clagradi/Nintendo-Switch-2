@@ -33,14 +33,7 @@ export async function saveParticipant(data: Participant) {
   try {
     const { data: rows, error } = await supabase
       .from('participants')
-      .insert(
-        [
-          {
-            ...data,
-            stato_pagamento: 'completed' // colonna presente nel DB
-          }
-        ]
-      )
+      .insert([ data ]) // Rimosso stato_pagamento
       .select()
 
     if (error) {
@@ -57,12 +50,10 @@ export async function saveParticipant(data: Participant) {
       return { success: false, error: supabaseError.message }
     }
 
-    // Se è stato ignorato perché duplicato, rows sarà vuoto
     if (rows?.length === 0) {
       return { success: false, error: 'Ticket already exists (ignored)' }
     }
 
-    // rows è array: prendi la prima (o null se insert ignorato)
     return { success: true, data: rows?.[0] ?? null }
   } catch (err) {
     console.error('Unexpected Supabase error:', err)

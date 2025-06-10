@@ -18,6 +18,7 @@ import {
 } from '@mui/icons-material'
 import { stripeService, priceHelpers } from '../services/stripe'
 import { saveParticipant, generateTicketNumber } from '../services/supabase'
+import { validateEmail, validateTwitterHandle, validateName } from '../utils/validation'
 
 interface PaymentButtonProps {
   onPayment?: (tickets: { number: number; purchased: Date; paymentId: string }[]) => void
@@ -33,13 +34,17 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
   const [error, setError] = useState('')
   
   const totalPrice = priceHelpers.calculateTotal(ticketCount)
-  
-  // Controlla se tutti i campi sono compilati
-  const isFormValid = firstName.trim() && lastName.trim() && twitterHandle.trim() && userEmail.trim()
+
+  // Validazione completa form
+  const isFormValid = 
+    validateName(firstName) && 
+    validateName(lastName) && 
+    validateTwitterHandle(twitterHandle) && 
+    validateEmail(userEmail)
 
   const handlePayment = async () => {
     if (!isFormValid) {
-      setError('Please fill in all fields')
+      setError('Please ensure all fields are correctly filled')
       return
     }
 
@@ -47,13 +52,13 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
     setError('')
     
     try {
-      const fullName = `${firstName} ${lastName}`
+      const fullName = `${firstName.trim()} ${lastName.trim()}`
       
       // Simula pagamento Stripe
       const paymentResult = await stripeService.initiatePayment({
         amount: totalPrice,
         ticketCount,
-        userEmail,
+        userEmail: userEmail.trim(),
         userName: fullName
       })
 
@@ -66,10 +71,10 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
 
       // Salva nel database Supabase
       const dbResult = await saveParticipant({
-        nome: firstName,
-        cognome: lastName,
-        email: userEmail,
-        twitter_handle: twitterHandle,
+        nome: firstName.trim(),
+        cognome: lastName.trim(),
+        email: userEmail.trim(),
+        twitter_handle: twitterHandle.trim(),
         numero_biglietto: ticketNumber,
         importo: totalPrice,
         ticket_count: ticketCount
@@ -153,6 +158,8 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
               onChange={(e) => setFirstName(e.target.value)}
               variant="outlined"
               required
+              error={firstName.length > 0 && !validateName(firstName)}
+              helperText={firstName.length > 0 && !validateName(firstName) ? 'Only letters and spaces, min 2 characters' : ''}
               className="payment-input-field"
             />
             <TextField
@@ -162,6 +169,8 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
               onChange={(e) => setLastName(e.target.value)}
               variant="outlined"
               required
+              error={lastName.length > 0 && !validateName(lastName)}
+              helperText={lastName.length > 0 && !validateName(lastName) ? 'Only letters and spaces, min 2 characters' : ''}
               className="payment-input-field"
             />
           </Box>
@@ -175,6 +184,8 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
             placeholder="username"
             sx={{ mb: 1 }}
             required
+            error={twitterHandle.length > 0 && !validateTwitterHandle(twitterHandle)}
+            helperText={twitterHandle.length > 0 && !validateTwitterHandle(twitterHandle) ? 'Only letters, numbers, underscore. Max 15 chars' : ''}
             className="payment-input-field"
           />
           
@@ -187,6 +198,8 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
             variant="outlined"
             required
             sx={{ mb: 1 }}
+            error={userEmail.length > 0 && !validateEmail(userEmail)}
+            helperText={userEmail.length > 0 && !validateEmail(userEmail) ? 'Please enter a valid email address' : ''}
             className="payment-input-field"
           />
         </Box>

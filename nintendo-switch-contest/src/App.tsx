@@ -3,6 +3,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { CssBaseline, Box } from '@mui/material'
 import HomePage from './pages/HomePage'
 import AboutPage from './pages/AboutPage'
+import SuccessPage from './pages/SuccessPage'
+import CancelPage from './pages/CancelPage'
 import Navbar from './components/Navbar'
 
 // Tema personalizzato per Nintendo
@@ -133,6 +135,8 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/success" element={<SuccessPage />} />
+            <Route path="/cancel" element={<CancelPage />} />
           </Routes>
         </Box>
       </Router>
