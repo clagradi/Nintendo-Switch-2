@@ -30,7 +30,14 @@ const CancelPage = () => {
           </Typography>
         </Alert>
 
-        <Box sx={{ mb: 4, p: 3, bgcolor: 'grey.50', borderRadius: 1 }}>
+        <Box sx={{ 
+          mb: 4, 
+          p: 3, 
+          background: 'rgba(255, 255, 255, 0.08)',
+          backdropFilter: 'blur(15px)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: 2 
+        }}>
           <Typography variant="h6" gutterBottom>
             What you can do now:
           </Typography>
