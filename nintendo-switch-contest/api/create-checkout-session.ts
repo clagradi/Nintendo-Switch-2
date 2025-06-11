@@ -14,23 +14,31 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
 })
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Abilita CORS
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  try {
+    // Abilita CORS
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end()
-  }
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' })
-  }
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end()
+    }
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Method not allowed' })
+    }
 
-  // Verifica che la chiave Stripe sia configurata
-  if (!process.env.STRIPE_SECRET_KEY) {
-    console.error('❌ STRIPE_SECRET_KEY not configured')
-    return res.status(500).json({ error: 'Server configuration error: STRIPE_SECRET_KEY missing' })
-  }
+    console.log('🔍 Environment check:', {
+      hasStripeKey: !!process.env.STRIPE_SECRET_KEY,
+      keyPrefix: process.env.STRIPE_SECRET_KEY?.substring(0, 7) || 'MISSING',
+      method: req.method,
+      body: req.body
+    })
+
+    // Verifica che la chiave Stripe sia configurata
+    if (!process.env.STRIPE_SECRET_KEY) {
+      console.error('❌ STRIPE_SECRET_KEY not configured')
+      return res.status(500).json({ error: 'Server configuration error: STRIPE_SECRET_KEY missing' })
+    }
 
   const { amount, userEmail, userName, ticketCount } = req.body
 
@@ -66,7 +74,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.status(200).json({ url: session.url })
   } catch (err) {
-    console.error('Stripe session creation error:', err)
-    return res.status(500).json({ error: 'Internal server error' })
+    console.error('❌ Stripe session creation error:', err)
+    
+    // Log dettagliato dell'errore
+    if (err instanceof Error) {
+      console.error('Error message:', err.message)
+      console.error('Error stack:', err.stack)
+    }
+    
+    return res.status(500).json({ 
+      error: 'Internal server error',
+      details: err instanceof Error ? err.message : 'Unknown error',
+      timestamp: new Date().toISOString()
+    })
   }
 }
