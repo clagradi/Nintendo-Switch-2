@@ -11,7 +11,19 @@ export default defineConfig({
       output: {
         manualChunks: undefined,
       },
+      onwarn(warning, warn) {
+        // Hide annoying warnings that don't affect functionality
+        if (
+          warning.code === 'CHUNK_LOAD_ERROR' ||
+          warning.code === 'MODULE_LEVEL_DIRECTIVE' ||
+          warning.message.includes('chunk')
+        ) {
+          return;
+        }
+        warn(warning);
+      },
     },
+    chunkSizeWarningLimit: 1000, // Increase chunk size limit to reduce warnings
   },
   server: {
     proxy: {
@@ -22,4 +34,11 @@ export default defineConfig({
       },
     },
   },
+  esbuild: {
+    // Suppress some console warnings during build
+    logOverride: { 
+      'this-is-undefined-in-esm': 'silent',
+      'empty-import-meta': 'silent'
+    }
+  }
 })
