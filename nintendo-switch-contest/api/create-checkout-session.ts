@@ -58,7 +58,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               name: 'Nintendo Switch Raffle Entry',
               description: `${ticketCount} ticket${ticketCount > 1 ? 's' : ''} for ${userName}`,
             },
-            unit_amount: amount * 100, // Converti in centesimi
+            unit_amount: amount, // Il frontend manda già i centesimi
           },
           quantity: 1,
         },
