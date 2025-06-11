@@ -3,6 +3,12 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
 import Stripe from 'stripe'
 
+// Debug environment variables
+console.log('🔍 Backend env check:', {
+  stripeSecretKey: process.env.STRIPE_SECRET_KEY ? 'SET' : 'MISSING',
+  hasValidKey: process.env.STRIPE_SECRET_KEY?.startsWith('sk_') ? 'VALID' : 'INVALID'
+})
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
   apiVersion: '2025-05-28.basil',
 })
@@ -18,6 +24,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  // Verifica che la chiave Stripe sia configurata
+  if (!process.env.STRIPE_SECRET_KEY) {
+    console.error('❌ STRIPE_SECRET_KEY not configured')
+    return res.status(500).json({ error: 'Server configuration error: STRIPE_SECRET_KEY missing' })
   }
 
   const { amount, userEmail, userName, ticketCount } = req.body
