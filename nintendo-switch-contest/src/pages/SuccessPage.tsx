@@ -32,7 +32,7 @@ const SuccessPage = () => {
   useEffect(() => {
     const fetchPaymentStatus = async () => {
       if (!sessionId) {
-        setError('Session ID non trovato')
+        setError('Session ID not found')
         setLoading(false)
         return
       }
@@ -41,13 +41,13 @@ const SuccessPage = () => {
         const response = await fetch(`/api/payment-status?session_id=${sessionId}`)
         
         if (!response.ok) {
-          throw new Error('Errore nel recupero dello stato del pagamento')
+          throw new Error('Error retrieving payment status')
         }
 
         const data = await response.json()
         setPaymentStatus(data)
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Errore sconosciuto')
+        setError(err instanceof Error ? err.message : 'Unknown error')
       } finally {
         setLoading(false)
       }
@@ -62,7 +62,7 @@ const SuccessPage = () => {
         <Paper sx={{ p: 4, textAlign: 'center' }}>
           <CircularProgress size={60} />
           <Typography variant="h6" sx={{ mt: 2 }}>
-            Verifica del pagamento in corso...
+            Verifying payment...
           </Typography>
         </Paper>
       </Container>
@@ -82,7 +82,7 @@ const SuccessPage = () => {
             variant="contained" 
             startIcon={<Home />}
           >
-            Torna alla Home
+            Back to Home
           </Button>
         </Paper>
       </Container>
@@ -95,24 +95,24 @@ const SuccessPage = () => {
         <Box textAlign="center" mb={4}>
           <CheckCircle sx={{ fontSize: 80, color: 'success.main', mb: 2 }} />
           <Typography variant="h3" component="h1" gutterBottom color="success.main">
-            Pagamento Completato!
+            Payment Completed!
           </Typography>
           <Typography variant="h6" color="text.secondary">
-            Grazie per aver partecipato al concorso Nintendo Switch!
+            Thank you for participating in the Nintendo Switch contest!
           </Typography>
         </Box>
 
         {paymentStatus && (
           <Box sx={{ mb: 4 }}>
             <Typography variant="h5" gutterBottom>
-              Dettagli del Pagamento
+              Payment Details
             </Typography>
             
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="body1">Stato:</Typography>
+                <Typography variant="body1">Status:</Typography>
                 <Chip 
-                  label={paymentStatus.payment_status === 'paid' ? 'Pagato' : paymentStatus.payment_status}
+                  label={paymentStatus.payment_status === 'paid' ? 'Paid' : paymentStatus.payment_status}
                   color={paymentStatus.payment_status === 'paid' ? 'success' : 'default'}
                 />
               </Box>
@@ -125,21 +125,21 @@ const SuccessPage = () => {
               </Box>
               
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body1">Importo:</Typography>
+                <Typography variant="body1">Amount:</Typography>
                 <Typography variant="body1" fontWeight="medium">
                   €{(paymentStatus.amount_total / 100).toFixed(2)}
                 </Typography>
               </Box>
               
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body1">Data:</Typography>
+                <Typography variant="body1">Date:</Typography>
                 <Typography variant="body1" fontWeight="medium">
-                  {new Date(paymentStatus.created * 1000).toLocaleString('it-IT')}
+                  {new Date(paymentStatus.created * 1000).toLocaleString('en-US')}
                 </Typography>
               </Box>
               
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body1">ID Transazione:</Typography>
+                <Typography variant="body1">Transaction ID:</Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ fontFamily: 'monospace' }}>
                   {paymentStatus.id}
                 </Typography>
@@ -150,8 +150,8 @@ const SuccessPage = () => {
 
         <Alert severity="info" sx={{ mb: 3 }}>
           <Typography variant="body2">
-            <strong>Importante:</strong> Conserva questa pagina come ricevuta del tuo pagamento. 
-            Riceverai una email di conferma all'indirizzo fornito durante il checkout.
+            <strong>Important:</strong> Keep this page as a receipt for your payment. 
+            You will receive a confirmation email at the address provided during checkout.
           </Typography>
         </Alert>
 
@@ -163,7 +163,7 @@ const SuccessPage = () => {
             size="large"
             startIcon={<Home />}
           >
-            Torna alla Home
+            Back to Home
           </Button>
           
           <Button 
@@ -172,14 +172,14 @@ const SuccessPage = () => {
             startIcon={<Receipt />}
             onClick={() => window.print()}
           >
-            Stampa Ricevuta
+            Print Receipt
           </Button>
         </Box>
 
         <Box sx={{ mt: 4, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
           <Typography variant="body2" color="text.secondary" textAlign="center">
-            Il tuo numero di biglietto sarà generato automaticamente e ti verrà comunicato via email. 
-            L'estrazione avrà luogo il 31 dicembre 2025.
+            Your ticket number will be generated automatically and communicated to you via email. 
+            The draw will take place on December 31, 2025.
           </Typography>
         </Box>
       </Paper>

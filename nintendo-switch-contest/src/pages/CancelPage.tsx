@@ -16,29 +16,29 @@ const CancelPage = () => {
         <Box textAlign="center" mb={4}>
           <Cancel sx={{ fontSize: 80, color: 'warning.main', mb: 2 }} />
           <Typography variant="h3" component="h1" gutterBottom color="warning.main">
-            Pagamento Annullato
+            Payment Cancelled
           </Typography>
           <Typography variant="h6" color="text.secondary">
-            Il pagamento è stato annullato. Nessun addebito è stato effettuato.
+            The payment has been cancelled. No charges have been made.
           </Typography>
         </Box>
 
         <Alert severity="info" sx={{ mb: 3 }}>
           <Typography variant="body1">
-            Non preoccuparti! Il tuo pagamento è stato annullato e non è stato effettuato alcun addebito 
-            sulla tua carta di credito o conto bancario.
+            Don't worry! Your payment has been cancelled and no charges have been made 
+            to your credit card or bank account.
           </Typography>
         </Alert>
 
         <Box sx={{ mb: 4, p: 3, bgcolor: 'grey.50', borderRadius: 1 }}>
           <Typography variant="h6" gutterBottom>
-            Cosa puoi fare ora:
+            What you can do now:
           </Typography>
           <Typography variant="body1" component="div">
             <ul style={{ paddingLeft: '1.5rem', margin: 0 }}>
-              <li>Riprova il pagamento se hai cambiato idea</li>
-              <li>Controlla i dettagli della tua carta se hai riscontrato problemi</li>
-              <li>Contattaci se hai bisogno di assistenza</li>
+              <li>Try the payment again if you changed your mind</li>
+              <li>Check your card details if you encountered issues</li>
+              <li>Contact us if you need assistance</li>
             </ul>
           </Typography>
         </Box>
@@ -51,7 +51,7 @@ const CancelPage = () => {
             size="large"
             startIcon={<Home />}
           >
-            Torna alla Home
+            Back to Home
           </Button>
           
           <Button 
@@ -61,14 +61,14 @@ const CancelPage = () => {
             size="large"
             startIcon={<Refresh />}
           >
-            Riprova il Pagamento
+            Try Payment Again
           </Button>
         </Box>
 
         <Box sx={{ mt: 4, textAlign: 'center' }}>
           <Typography variant="body2" color="text.secondary">
-            Se continui ad avere problemi con il pagamento, puoi contattarci via email 
-            per ricevere assistenza personalizzata.
+            If you continue to have payment issues, you can contact us via email 
+            to receive personalized assistance.
           </Typography>
         </Box>
       </Paper>

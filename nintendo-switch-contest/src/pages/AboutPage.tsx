@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom'
 
 const AboutPage = () => {
   const theme = useTheme()
-  // Inserisci qui il tuo username X (ex Twitter)
-  const xUsername = "ClaudioSonnet" // Cambia questo con il tuo vero username X
+  // Insert your X (ex Twitter) username here
+  const xUsername = "ClaudioSonnet" // Change this to your real X username
 
   return (
     <Box className="main-container" sx={{ py: 4 }}>

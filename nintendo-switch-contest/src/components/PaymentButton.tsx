@@ -35,7 +35,7 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
   
   const totalPrice = priceHelpers.calculateTotal(ticketCount)
 
-  // Validazione completa form
+  // Complete form validation
   const isFormValid = 
     validateName(firstName) && 
     validateName(lastName) && 
@@ -54,7 +54,7 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
     try {
       const fullName = `${firstName.trim()} ${lastName.trim()}`
       
-      // Simula pagamento Stripe
+      // Simulate Stripe payment
       const paymentResult = await stripeService.initiatePayment({
         amount: totalPrice,
         ticketCount,
@@ -66,10 +66,10 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
         throw new Error(paymentResult.error || 'Payment failed')
       }
 
-      // Genera numero biglietto unico
+      // Generate unique ticket number
       const ticketNumber = generateTicketNumber()
 
-      // Salva nel database Supabase
+      // Save to Supabase database
       const dbResult = await saveParticipant({
         nome: firstName.trim(),
         cognome: lastName.trim(),
@@ -84,9 +84,9 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
         throw new Error(dbResult.error || 'Failed to save participant data')
       }
 
-      // Genera i biglietti per la UI locale
+      // Generate tickets for local UI
       const newTickets = Array.from({ length: ticketCount }, (_, index) => ({
-        number: parseInt(ticketNumber) + index, // Converti a number e incrementa per ogni biglietto
+        number: parseInt(ticketNumber) + index, // Convert to number and increment for each ticket
         purchased: new Date(),
         paymentId: `payment_${Date.now()}_${index}`
       }))
@@ -114,7 +114,7 @@ const PaymentButton = ({ onPayment }: PaymentButtonProps) => {
   }
 
   const incrementTickets = () => {
-    setTicketCount(prev => Math.min(prev + 1, 10)) // Massimo 10 biglietti per volta
+    setTicketCount(prev => Math.min(prev + 1, 10)) // Maximum 10 tickets at a time
   }
 
   const decrementTickets = () => {

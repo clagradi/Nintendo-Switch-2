@@ -4,7 +4,7 @@
 
 import { createClient } from '@supabase/supabase-js'
 
-/* 1️⃣  Inizializzazione con fail‑fast */
+/* 1️⃣  Initialization with fail-fast */
 const supabaseUrl     = import.meta.env.VITE_SUPABASE_URL as string
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string
 
@@ -23,23 +23,23 @@ export const supabase = createClient(
   supabaseAnonKey || 'placeholder-key'
 )
 
-/* 2️⃣  Tipi */
+/* 2️⃣  Types */
 export interface Participant {
   nome: string
   cognome: string
   email: string
   twitter_handle: string
   numero_biglietto: string
-  importo: number               // in euro
+  importo: number               // in euros
   ticket_count: number
 }
 
-/* 3️⃣  Funzione di salvataggio con protezione duplicati */
+/* 3️⃣  Save function with duplicate protection */
 export async function saveParticipant(data: Participant) {
   try {
     const { data: rows, error } = await supabase
       .from('participants')
-      .insert([ data ]) // Rimosso stato_pagamento
+      .insert([ data ]) // Removed payment_status
       .select()
 
     if (error) {
@@ -67,7 +67,7 @@ export async function saveParticipant(data: Participant) {
   }
 }
 
-/* 4️⃣  Generatore ticket: timestamp compatto + random sicuro */
+/* 4️⃣  Ticket generator: compact timestamp + secure random */
 export function generateTicketNumber(): string {
   const ts  = Date.now().toString(36).slice(-5).toUpperCase()
   const rnd = crypto.getRandomValues(new Uint32Array(1))[0]

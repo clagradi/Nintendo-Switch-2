@@ -15,7 +15,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
-    // Abilita CORS
+    // Enable CORS
     res.setHeader('Access-Control-Allow-Origin', '*')
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
@@ -34,7 +34,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       body: req.body
     })
 
-    // Verifica che la chiave Stripe sia configurata
+    // Verify that the Stripe key is configured
     if (!process.env.STRIPE_SECRET_KEY) {
       console.error('❌ STRIPE_SECRET_KEY not configured')
       return res.status(500).json({ error: 'Server configuration error: STRIPE_SECRET_KEY missing' })
